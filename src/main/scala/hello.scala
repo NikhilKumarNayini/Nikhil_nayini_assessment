@@ -20,7 +20,9 @@ object hello {
 
 //    capGeminiTask.dataCleaning(spark).show(truncate = false)
 
-    capGeminiTask.userDefinedFunctionExample(spark).show()
+//    capGeminiTask.userDefinedFunctionExample(spark).show()
+
+      capGeminiTask.userDefinedFunctionSQLExample(spark).show()
 
 
 //    // providerReport
