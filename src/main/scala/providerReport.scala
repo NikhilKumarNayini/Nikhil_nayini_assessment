@@ -1,12 +1,9 @@
-
-package com.sparkProject
 import org.apache.spark.sql
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
 
-object providerReport
-{
+object providerReport {
   //  Data Extraction
   def extract(spark: SparkSession): (sql.DataFrame, sql.DataFrame) = {
 
@@ -41,7 +38,6 @@ object providerReport
   // Data Transformation
   def transform( providersDF: sql.DataFrame, visitsDF: sql.DataFrame): (sql.DataFrame, sql.DataFrame) =
   {
-
     //perform transformations
     // Total Visits per Provider
     val totalVisitsPerProvider = visitsDF
@@ -58,7 +54,6 @@ object providerReport
       .groupBy("provider_id", "visit_month")
       .agg(count("visit_id").alias("totalVisits"))
       .select("provider_id", "visit_month", "totalVisits")
-
     (totalVisitsPerProvider, totalVisitsPerProviderPerMonth)
   }
   // Data Loading

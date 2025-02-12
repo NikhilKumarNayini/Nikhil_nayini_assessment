@@ -23,6 +23,7 @@ object practice {
       .toDF(columns: _*)
     println("Original Dataframe")
     df.show()
+
     val deduplicated_df = df.dropDuplicates("id")
 
     println("Deduplicated Dataframe")
@@ -32,7 +33,7 @@ object practice {
       deduplicated_df.groupBy("department")
       .avg("salary")
       .withColumnRenamed("avg(salary)", "average_salary")
+
     avg_salary_dept
   }
-
 }
