@@ -80,8 +80,7 @@ object capGeminiTask {
     })
     cleanedDf
   }
-
-//   User-Defined Functions (UDFs) in Apache Spark allow you to define custom functions to apply transformations on DataFrame columns.
+  //   User-Defined Functions (UDFs) in Apache Spark allow you to define custom functions to apply transformations on DataFrame columns.
 //  UDFs can be used to perform operations that are not available in built-in Spark SQL functions.
 //  Here’s a detailed explanation along with an example.
 //  Creating a UDF in Spark
@@ -92,20 +91,17 @@ object capGeminiTask {
 //  Example
 //  Let’s create a simple example where we have a DataFrame containing names, and we want to create a UDF to capitalize the first letter of each name.
 
-  def userDefinedFunctionExample (spark: SparkSession): sql.DataFrame = {
-
-    def capitalizeFirstLetter(name: String): String = {
-      if (name == null || name.isEmpty) {
-        name
-      } else {
-        name.substring(0, 1).toUpperCase + name.substring(1).toLowerCase
-      }
+  def capitalizeFirstLetter(name: String): String = {
+    if (name == null || name.isEmpty) {
+      name
+    } else {
+      name.substring(0, 1).toUpperCase + name.substring(1).toLowerCase
     }
+  }
+  val capitalizeUDF = udf(capitalizeFirstLetter _)
 
-    // Register the function as a UDF
-    val capitalizeUDF = udf(capitalizeFirstLetter _)
+  def userDefinedFunctionExample (spark: SparkSession): sql.DataFrame = {
     import spark.implicits._
-
     val df = Seq(
       "rahul",
       "umesh",
@@ -116,6 +112,20 @@ object capGeminiTask {
     val dfWithCapitalizedNames = df.withColumn("capitalized_name", capitalizeUDF($"name"))
     dfWithCapitalizedNames.show(truncate = false)
     dfWithCapitalizedNames
+  }
 
+  def userDefinedFunctionSQLExample (spark: SparkSession): sql.DataFrame = {
+    import spark.implicits._
+    spark.udf.register("capitalizeFirstLetter", capitalizeFirstLetter(_: String): String)
+    val df = Seq(
+      "rahul",
+      "umesh",
+      "vijay",
+      "pawan"
+    ).toDF("name")
+
+    df.createOrReplaceTempView("names")
+    val result = spark.sql("SELECT name, capitalizeFirstLetter(name) AS capitalized_name FROM names")
+    result
   }
 }
